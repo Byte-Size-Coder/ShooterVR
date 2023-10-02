@@ -1,80 +1,66 @@
 using BSC.SVR.Combat;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class HandEquip : MonoBehaviour
+namespace BSC.SVR.Action
 {
-    public Gun currentEquippedGun = null;
-
-    public InputActionReference primaryButtonReference;
-
-    public string orientation;
-
-    private bool canReload;
-    private void Start()
+    public class HandEquip : MonoBehaviour
     {
-        primaryButtonReference.action.performed += ToggleDrum;
-    }
+        public InputActionReference primaryButtonReference;
+        public string orientation;
 
-    private void OnDestroy()
-    {
-        primaryButtonReference.action.performed -= ToggleDrum;
-    }
+        private Gun currentEquippedGun = null;
 
-    public void Equip(SelectEnterEventArgs args)
-    {
-        Gun gun = args.interactableObject.transform.GetComponent<Gun>();
-
-        if (gun == null) return;
-
-        currentEquippedGun = gun;
-        Debug.Log("I GRABBED A GUN!");
-    }
-
-    public void UnEquip()
-    {
-        if (currentEquippedGun == null ) return;
-
-
-        currentEquippedGun = null;
-    }
-
-    private void Reload()
-    {
-        if (currentEquippedGun == null) return;
-      
-        currentEquippedGun.Reload();
-        
-    }
-
-    private void ToggleDrum(InputAction.CallbackContext context)
-    {
-        Debug.Log("TEST! TESSSt");
-        Debug.Log(currentEquippedGun);
-        if (currentEquippedGun == null) return;
-
-        currentEquippedGun.ToggleDrum(orientation);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        
-        if (other.tag == "Reload")
+        private void Start()
         {
-            Debug.Log("FOUND RELOAD");
-            Holster holster = other.GetComponent<Holster>();
-            if (holster)
+            primaryButtonReference.action.performed += ToggleDrum;
+        }
+
+        private void OnDestroy()
+        {
+            primaryButtonReference.action.performed -= ToggleDrum;
+        }
+
+        public void Equip(SelectEnterEventArgs args)
+        {
+            Gun gun = args.interactableObject.transform.GetComponent<Gun>();
+
+            if (gun == null) return;
+
+            currentEquippedGun = gun;
+        }
+
+        public void UnEquip()
+        {
+            if (currentEquippedGun == null) return;
+            currentEquippedGun = null;
+        }
+
+        private void Reload()
+        {
+            if (currentEquippedGun == null || currentEquippedGun.IsAmmoFull()) return;
+
+            currentEquippedGun.Reload();
+        }
+
+        private void ToggleDrum(InputAction.CallbackContext context)
+        {
+            if (currentEquippedGun == null) return;
+
+            currentEquippedGun.ToggleDrum(orientation);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "Reload")
             {
-                Reload();
+                Holster holster = other.GetComponent<Holster>();
+                if (holster)
+                {
+                    Reload();
+                }
             }
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-
     }
 }

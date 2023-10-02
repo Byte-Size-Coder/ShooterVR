@@ -6,12 +6,16 @@ namespace BSC.SVR.Combat
     {
         [Header("Spawn Info")]
         [SerializeField] private Vector3 spawnSize;
-
         [SerializeField] private float spawnSpeed;
-
         [SerializeField] private PoolObject[] targetPrefabs;
 
         private float spawnTimer = 0.0f;
+        private bool startSpawner = false;
+
+        public void SetStartSpawner(bool value)
+        {
+            startSpawner = value;
+        }
 
         private void OnDrawGizmos()
         {
@@ -19,13 +23,11 @@ namespace BSC.SVR.Combat
             Gizmos.DrawCube(transform.position, spawnSize);
         }
 
-        void Start()
-        {
-
-        }
 
         void Update()
         {
+            if (!startSpawner) return;
+
             spawnTimer += Time.deltaTime;
 
             if (spawnTimer > spawnSpeed)
