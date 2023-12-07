@@ -7,19 +7,21 @@ namespace BSC.SVR.Action
 {
     public class HandEquip : MonoBehaviour
     {
-        public InputActionReference primaryButtonReference;
+        public InputActionProperty angularVelocityProperty;
         public string orientation;
-
-        private Gun currentEquippedGun = null;
-
-        private void Start()
+        
+        private Gun _currentEquippedGun;
+        private FlickDetector _flickDetector;
+        
+        private void Awake()
         {
-            primaryButtonReference.action.performed += ToggleDrum;
+            _flickDetector = GetComponent<FlickDetector>();
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            primaryButtonReference.action.performed -= ToggleDrum;
+            if (_currentEquippedGun == null || _flickDetector == null) return;
+            _flickDetector.CheckFlick(this);
         }
 
         public void Equip(SelectEnterEventArgs args)
@@ -28,38 +30,41 @@ namespace BSC.SVR.Action
 
             if (gun == null) return;
 
-            currentEquippedGun = gun;
+            _currentEquippedGun = gun;
         }
 
+        public float GetRotationSpeed()
+        {
+            return angularVelocityProperty.action.ReadValue<Vector3>().magnitude;
+        }
+        
         public void UnEquip()
         {
-            if (currentEquippedGun == null) return;
-            currentEquippedGun = null;
+            _currentEquippedGun = null;
+        }
+
+        public void FlickToggleDrum()
+        {
+            if (_currentEquippedGun == null) return;
+
+            _currentEquippedGun.ToggleDrum(orientation);
         }
 
         private void Reload()
         {
-            if (currentEquippedGun == null || currentEquippedGun.IsAmmoFull()) return;
+            if (_currentEquippedGun == null || _currentEquippedGun.IsAmmoFull()) return;
 
-            currentEquippedGun.Reload();
+            _currentEquippedGun.Reload();
         }
-
-        private void ToggleDrum(InputAction.CallbackContext context)
-        {
-            if (currentEquippedGun == null) return;
-
-            currentEquippedGun.ToggleDrum(orientation);
-        }
+        
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "Reload")
+            if (!other.CompareTag("Reload")) return;
+            var holster = other.GetComponent<Holster>();
+            if (holster)
             {
-                Holster holster = other.GetComponent<Holster>();
-                if (holster)
-                {
-                    Reload();
-                }
+                Reload();
             }
         }
     }

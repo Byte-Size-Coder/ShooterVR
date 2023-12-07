@@ -1227,6 +1227,76 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Velocity"",
+            ""id"": ""b5a355d0-9b96-42f6-8a93-da0b306e40a6"",
+            ""actions"": [
+                {
+                    ""name"": ""RightVelocity"",
+                    ""type"": ""Value"",
+                    ""id"": ""dd003701-4082-4281-9c5e-01b416d9c2b5"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LeftVelocity"",
+                    ""type"": ""Value"",
+                    ""id"": ""255b46e1-b821-4588-bb39-3f4cc3960358"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""7ccaa44c-53f9-4e1e-b064-a48e0048e152"",
+                    ""path"": ""<OculusTouchController>{RightHand}/deviceAngularVelocity"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightVelocity"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""543cd2d5-4918-4bd6-9c85-d1bd52cfbc98"",
+                    ""path"": ""<XRController>{RightHand}/deviceAngularVelocity"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightVelocity"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a4b9cc6e-edc2-4417-be21-d072dfe3c7e9"",
+                    ""path"": ""<OculusTouchController>{LeftHand}/deviceAngularVelocity"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftVelocity"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fb90b385-2e3a-4ed5-b68f-5081d4a7b020"",
+                    ""path"": ""<XRController>{LeftHand}/deviceAngularVelocity"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftVelocity"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1338,6 +1408,10 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         m_XRIRightHand_Grip = m_XRIRightHand.FindAction("Grip", throwIfNotFound: true);
         m_XRIRightHand_Pinch = m_XRIRightHand.FindAction("Pinch", throwIfNotFound: true);
         m_XRIRightHand_MainButton_Right = m_XRIRightHand.FindAction("MainButton_Right", throwIfNotFound: true);
+        // Velocity
+        m_Velocity = asset.FindActionMap("Velocity", throwIfNotFound: true);
+        m_Velocity_RightVelocity = m_Velocity.FindAction("RightVelocity", throwIfNotFound: true);
+        m_Velocity_LeftVelocity = m_Velocity.FindAction("LeftVelocity", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1845,6 +1919,60 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         }
     }
     public XRIRightHandActions @XRIRightHand => new XRIRightHandActions(this);
+
+    // Velocity
+    private readonly InputActionMap m_Velocity;
+    private List<IVelocityActions> m_VelocityActionsCallbackInterfaces = new List<IVelocityActions>();
+    private readonly InputAction m_Velocity_RightVelocity;
+    private readonly InputAction m_Velocity_LeftVelocity;
+    public struct VelocityActions
+    {
+        private @XRIDefaultInputActions m_Wrapper;
+        public VelocityActions(@XRIDefaultInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @RightVelocity => m_Wrapper.m_Velocity_RightVelocity;
+        public InputAction @LeftVelocity => m_Wrapper.m_Velocity_LeftVelocity;
+        public InputActionMap Get() { return m_Wrapper.m_Velocity; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(VelocityActions set) { return set.Get(); }
+        public void AddCallbacks(IVelocityActions instance)
+        {
+            if (instance == null || m_Wrapper.m_VelocityActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_VelocityActionsCallbackInterfaces.Add(instance);
+            @RightVelocity.started += instance.OnRightVelocity;
+            @RightVelocity.performed += instance.OnRightVelocity;
+            @RightVelocity.canceled += instance.OnRightVelocity;
+            @LeftVelocity.started += instance.OnLeftVelocity;
+            @LeftVelocity.performed += instance.OnLeftVelocity;
+            @LeftVelocity.canceled += instance.OnLeftVelocity;
+        }
+
+        private void UnregisterCallbacks(IVelocityActions instance)
+        {
+            @RightVelocity.started -= instance.OnRightVelocity;
+            @RightVelocity.performed -= instance.OnRightVelocity;
+            @RightVelocity.canceled -= instance.OnRightVelocity;
+            @LeftVelocity.started -= instance.OnLeftVelocity;
+            @LeftVelocity.performed -= instance.OnLeftVelocity;
+            @LeftVelocity.canceled -= instance.OnLeftVelocity;
+        }
+
+        public void RemoveCallbacks(IVelocityActions instance)
+        {
+            if (m_Wrapper.m_VelocityActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IVelocityActions instance)
+        {
+            foreach (var item in m_Wrapper.m_VelocityActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_VelocityActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public VelocityActions @Velocity => new VelocityActions(this);
     private int m_GenericXRControllerSchemeIndex = -1;
     public InputControlScheme GenericXRControllerScheme
     {
@@ -1922,5 +2050,10 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         void OnGrip(InputAction.CallbackContext context);
         void OnPinch(InputAction.CallbackContext context);
         void OnMainButton_Right(InputAction.CallbackContext context);
+    }
+    public interface IVelocityActions
+    {
+        void OnRightVelocity(InputAction.CallbackContext context);
+        void OnLeftVelocity(InputAction.CallbackContext context);
     }
 }
