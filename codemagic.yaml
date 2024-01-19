@@ -7,7 +7,7 @@ workflows:
                 - unity # <-- (Includes UNITY_SERIAL, UNITY_USERNAME, UNITY_PASSWORD)
                 - keystore_credentials # <-- (Includes CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_PASSWORD, CM_KEY_ALIAS)
             vars:
-                UNITY_BIN: ${UNITY_HOME}/Contents/MacOS/Unity
+                UNITY_BIN: $UNITY_HOME/Contents/MacOS/Unity
                 BUILD_SCRIPT: BuildAndroid
                 PACKAGE_NAME: "com.bsc.westernVR"
         scripts:
