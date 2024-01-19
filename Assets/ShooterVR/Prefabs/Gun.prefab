@@ -29,7 +29,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.031, z: -0.0074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4648470685155266018}
   m_Father: {fileID: 5327670870620161115}
   m_LocalEulerAnglesHint: {x: 33.557, y: 0, z: 0}
 --- !u!65 &6069296074838953414
@@ -308,6 +309,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6333469890815924809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4648470685155266018}
+  m_Layer: 0
+  m_Name: Grip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4648470685155266018
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6333469890815924809}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.2833222, y: -0, z: -0, w: 0.95902485}
+  m_LocalPosition: {x: 0, y: 0.0019, z: -0.0017}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8187442911767701553}
+  m_LocalEulerAnglesHint: {x: -32.917, y: 0, z: 0}
 --- !u!1 &6663234158261218650
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +647,7 @@ MonoBehaviour:
   m_OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
-  m_AttachTransform: {fileID: 0}
+  m_AttachTransform: {fileID: 4648470685155266018}
   m_SecondaryAttachTransform: {fileID: 0}
   m_UseDynamicAttach: 0
   m_MatchAttachPosition: 1
@@ -680,12 +712,6 @@ MonoBehaviour:
   anim: {fileID: 514919945449921036}
   particle: {fileID: 3314194265562893834}
   rayCastOrigin: {fileID: 8944530337308652461}
-  gunAudio: {fileID: 3445579066715534583}
-  fireClip: {fileID: 8300000, guid: 351a58d36804aec4089170b9af434a5e, type: 3}
-  noFireClip: {fileID: 8300000, guid: 8579e5ff7da46d948908156e21f51721, type: 3}
-  reloadClip: {fileID: 8300000, guid: 58a6a47b29836a646bbae5e839bab68e, type: 3}
-  drumOpenClip: {fileID: 8300000, guid: dc5c9a72e3fff8d4cae1eaf1c7cb5925, type: 3}
-  drumCloseClip: {fileID: 8300000, guid: 44a6ffe56d6c1ba419c188a68106c7f0, type: 3}
   maxAmmo: 6
   bullets:
   - {fileID: 6554358343066356193}
@@ -694,7 +720,12 @@ MonoBehaviour:
   - {fileID: 620991757109682156}
   - {fileID: 9209913901793869871}
   - {fileID: 6710273073572848245}
-  drumOpen: 0
+  gunAudio: {fileID: 3445579066715534583}
+  fireClip: {fileID: 8300000, guid: 351a58d36804aec4089170b9af434a5e, type: 3}
+  noFireClip: {fileID: 8300000, guid: 8579e5ff7da46d948908156e21f51721, type: 3}
+  reloadClip: {fileID: 8300000, guid: 58a6a47b29836a646bbae5e839bab68e, type: 3}
+  drumOpenClip: {fileID: 8300000, guid: dc5c9a72e3fff8d4cae1eaf1c7cb5925, type: 3}
+  drumCloseClip: {fileID: 8300000, guid: 44a6ffe56d6c1ba419c188a68106c7f0, type: 3}
 --- !u!95 &514919945449921036
 Animator:
   serializedVersion: 5
@@ -1007,7 +1038,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19885060, guid: 2574ca206a571a342a7fab69fdfb87aa, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19949966, guid: 2574ca206a571a342a7fab69fdfb87aa, type: 3}
       propertyPath: m_Materials.Array.size

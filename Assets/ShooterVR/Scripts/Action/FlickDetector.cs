@@ -14,7 +14,7 @@ namespace BSC.SVR.Action
 
         public void CheckFlick(HandEquip hand)
         {
-            var speed = hand.GetRotationSpeed();
+            var speed = Mathf.Abs(hand.GetRotationSpeed());
             _brokenThreshold = HasFlickBegun(speed);
 
             if (!HasFlickEnded(speed)) return;

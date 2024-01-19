@@ -1,0 +1,27 @@
+workflows:
+    unity-android-workflow:
+        name: Unity Android Workflow
+        max_build_duration: 120
+        environment:
+            groups:
+                - unity # <-- (Includes UNITY_SERIAL, UNITY_USERNAME, UNITY_PASSWORD)
+                - keystore_credentials # <-- (Includes CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_PASSWORD, CM_KEY_ALIAS)
+            vars:
+                UNITY_BIN: ${UNITY_HOME}/Contents/MacOS/Unity
+                BUILD_SCRIPT: BuildAndroid
+                PACKAGE_NAME: "com.minapecheux.Icopop"
+        scripts:
+            - name: Activate Unity License
+              script: |
+                  $UNITY_BIN -batchmode -quit -logFile -username ${UNITY_USERNAME?} -password ${UNITY_PASSWORD?}
+            - name: Set up keystore
+              script: echo $CM_KEYSTORE | base64 --decode > $CM_BUILD_DIR/keystore.keystore
+            - name: Build Unity app
+              script: |
+                  $UNITY_BIN -batchmode -quit -logFile -projectPath . -executeMethod BuildScript.$BUILD_SCRIPT -nographics -buildTarget Android
+        artifacts:
+            - android/*.apk
+        publishing:
+            scripts:
+                - name: Deactivate License
+                  script: $UNITY_BIN -batchmode -quit -returnlicense -nographics

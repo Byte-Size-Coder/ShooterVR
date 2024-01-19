@@ -1,5 +1,6 @@
 using BSC.SVR.Combat;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -9,6 +10,8 @@ namespace BSC.SVR.Action
     {
         public InputActionProperty angularVelocityProperty;
         public string orientation;
+
+        public UnityEvent OnReload;
         
         private Gun _currentEquippedGun;
         private FlickDetector _flickDetector;
@@ -35,7 +38,9 @@ namespace BSC.SVR.Action
 
         public float GetRotationSpeed()
         {
-            return angularVelocityProperty.action.ReadValue<Vector3>().magnitude;
+            var angularVelocity = angularVelocityProperty.action.ReadValue<Vector3>();
+            Debug.Log(angularVelocity.z);
+            return angularVelocity.z;
         }
         
         public void UnEquip()
@@ -55,6 +60,7 @@ namespace BSC.SVR.Action
             if (_currentEquippedGun == null || _currentEquippedGun.IsAmmoFull()) return;
 
             _currentEquippedGun.Reload();
+            OnReload.Invoke();
         }
         
 
