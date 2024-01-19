@@ -12,8 +12,6 @@ public static class BuildScript
         PlayerSettings.Android.useCustomKeystore = true;
         EditorUserBuildSettings.buildAppBundle = false;
         
-        PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android,"com.bsc.westernVR");
-        
         // set bundle version. NEW_BUILD_NUMBER env var is set in codemagic.yaml
         var versionIsSet = int.TryParse(Environment.GetEnvironmentVariable("NEW_BUILD_NUMBER"), out int version);
         if (versionIsSet)
