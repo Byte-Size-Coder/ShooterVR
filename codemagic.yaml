@@ -9,7 +9,7 @@ workflows:
             vars:
                 UNITY_BIN: ${UNITY_HOME}/Contents/MacOS/Unity
                 BUILD_SCRIPT: BuildAndroid
-                PACKAGE_NAME: "com.minapecheux.Icopop"
+                PACKAGE_NAME: "com.bsc.westernVR"
         scripts:
             - name: Activate Unity License
               script: |
