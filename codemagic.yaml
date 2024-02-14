@@ -19,7 +19,7 @@ workflows:
                   $UNITY_BIN -batchmode -quit -logFile -serial ${UNITY_SERIAL?} -username ${UNITY_USERNAME?} -password ${UNITY_PASSWORD?}
             - name: Set up build number
               script: |
-                export NEW_BUILD_NUMBER=$BUILD_NUMBER
+                  export NEW_BUILD_NUMBER=$BUILD_NUMBER
             - name: Build Unity app
               script: |
                   $UNITY_BIN -batchmode -quit -logFile -projectPath . -executeMethod BuildScript.$BUILD_SCRIPT -nographics -buildTarget Android
@@ -28,26 +28,25 @@ workflows:
         publishing:
             scripts:
                 - name: Deactivate License
-                   script: | 
-                    /Applications/Unity\ Hub.app/Contents/Frameworks/UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client \
-                    --return-ulf \
-                    --username ${UNITY_USERNAME?} \
-                    --password ${UNITY_PASSWORD?}
+                  script: |
+                      /Applications/Unity\ Hub.app/Contents/Frameworks/UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client \
+                          --return-ulf \
+                          --username ${UNITY_USERNAME?} \
+                          --password ${UNITY_PASSWORD?}
                 - name: Install Oculus CLI tools
                   script: |
-                  wget -O ovr-platform-util \
-                    "https://www.oculus.com/download_app/?id=1462426033810370&access_token=OC%7C1462426033810370%7C
-                  chmod +x ./ovr-platform-util
+                      wget -O ovr-platform-util \
+                          "https://www.oculus.com/download_app/?id=1462426033810370&access_token=OC%7C1462426033810370%7C
+                      chmod +x ./ovr-platform-util
                 - name: Publish app on a Oculus test release channel
                   script: |
-                    ./ovr-platform-util upload-quest-build \
-                        --app_id $OCULUS_APP_ID \
-                        --app_secret $OCULUS_APP_SECRET \
-                        --apk android/VRshooter.apk \
-                        --channel $OCULUS_RELEASE_CHANNEL
+                      ./ovr-platform-util upload-quest-build \
+                          --app_id $OCULUS_APP_ID \
+                          --app_secret $OCULUS_APP_SECRET \
+                          --apk android/VRshooter.apk \
+                          --channel $OCULUS_RELEASE_CHANNEL
         email:
-            recipients:
-                matthew@bytesizecoder.ca
+            recipients: matthew@bytesizecoder.ca
             notify:
                 success: true
                 failure: true
