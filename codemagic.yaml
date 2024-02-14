@@ -1,21 +1,25 @@
 workflows:
-    unity-android-workflow:
-        name: Unity Android Workflow
+    unity-oculus-workflow:
+        name: Unity Oculus Workflow
         max_build_duration: 120
         environment:
+            android_signing:
+                - BSC-Western-Key
             groups:
-                - unity # <-- (Includes UNITY_SERIAL, UNITY_USERNAME, UNITY_PASSWORD)
-                - keystore_credentials # <-- (Includes CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_PASSWORD, CM_KEY_ALIAS)
+                - unity_credentials # <-- (Includes UNITY_SERIAL, UNITY_USERNAME, UNITY_PASSWORD)
+                - oculus_credentials # <-- (Includes OCULUS_APP_ID, OCULUS_APP_SECRET, OCULUS_USER_TOKEN)
             vars:
                 UNITY_BIN: $UNITY_HOME/Contents/MacOS/Unity
                 BUILD_SCRIPT: BuildAndroid
                 PACKAGE_NAME: "com.bsc.westernVR"
+                OCULUS_RELEASE_CHANNEL: ALPHA
         scripts:
             - name: Activate Unity License
               script: |
-                  $UNITY_BIN -batchmode -quit -logFile -username ${UNITY_USERNAME?} -password ${UNITY_PASSWORD?}
-            - name: Set up keystore
-              script: echo $CM_KEYSTORE | base64 --decode > $CM_BUILD_DIR/keystore.keystore
+                  $UNITY_BIN -batchmode -quit -logFile -serial ${UNITY_SERIAL?} -username ${UNITY_USERNAME?} -password ${UNITY_PASSWORD?}
+            - name: Set up build number
+              script: |
+                export NEW_BUILD_NUMBER=$BUILD_NUMBER
             - name: Build Unity app
               script: |
                   $UNITY_BIN -batchmode -quit -logFile -projectPath . -executeMethod BuildScript.$BUILD_SCRIPT -nographics -buildTarget Android
@@ -24,4 +28,26 @@ workflows:
         publishing:
             scripts:
                 - name: Deactivate License
-                  script: $UNITY_BIN -batchmode -quit -returnlicense -nographics
+                   script: | 
+                    /Applications/Unity\ Hub.app/Contents/Frameworks/UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client \
+                    --return-ulf \
+                    --username ${UNITY_USERNAME?} \
+                    --password ${UNITY_PASSWORD?}
+                - name: Install Oculus CLI tools
+                  script: |
+                  wget -O ovr-platform-util \
+                    "https://www.oculus.com/download_app/?id=1462426033810370&access_token=OC%7C1462426033810370%7C
+                  chmod +x ./ovr-platform-util
+                - name: Publish app on a Oculus test release channel
+                  script: |
+                    ./ovr-platform-util upload-quest-build \
+                        --app_id $OCULUS_APP_ID \
+                        --app_secret $OCULUS_APP_SECRET \
+                        --apk android/VRshooter.apk \
+                        --channel $OCULUS_RELEASE_CHANNEL
+        email:
+            recipients:
+                matthew@bytesizecoder.ca
+            notify:
+                success: true
+                failure: true
