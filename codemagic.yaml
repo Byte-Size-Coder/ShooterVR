@@ -45,8 +45,8 @@ workflows:
                           --app_secret $OCULUS_APP_SECRET \
                           --apk android/VRshooter.apk \
                           --channel $OCULUS_RELEASE_CHANNEL
-        email:
-            recipients: matthew@bytesizecoder.ca
-            notify:
-                success: true
-                failure: true
+            email:
+                recipients: matthew@bytesizecoder.ca
+                notify:
+                    success: true
+                    failure: true
