@@ -1,8 +1,10 @@
 workflows:
     unity-oculus-workflow:
         name: Unity Oculus Workflow
+        instance_type: mac_mini_m1
         max_build_duration: 120
         environment:
+            unity: 2022.3.10f1
             android_signing:
                 - BSC-Western-Key
             groups:
