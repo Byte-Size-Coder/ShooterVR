@@ -37,7 +37,7 @@ workflows:
                 - name: Install Oculus CLI tools
                   script: |
                       wget -O ovr-platform-util \
-                          "https://www.oculus.com/download_app/?id=1462426033810370&access_token=OC%7C1462426033810370%7C
+                          "https://www.oculus.com/download_app/?id=1462426033810370&access_token=OC%7C1462426033810370%7C"
                       chmod +x ./ovr-platform-util
                 - name: Publish app on a Oculus test release channel
                   script: |
