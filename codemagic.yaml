@@ -25,7 +25,7 @@ workflows:
               script: |
                   $UNITY_HOME/Contents/MacOS/Unity -batchmode -quit -logFile -projectPath . -executeMethod BuildScript.$BUILD_SCRIPT -nographics -buildTarget Android
         artifacts:
-            - android/*.apk
+            - android/VRshooter.apk
         publishing:
             scripts:
                 - name: Deactivate License
